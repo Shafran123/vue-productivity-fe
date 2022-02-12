@@ -39,7 +39,7 @@
 <template>
   <div class="mainContainer">
     <div class="pageHeadingComponent">
-      <h1 class="pageHeadingH1">Tasks</h1>
+      <h1 class="pageHeadingH1">⚒️ Tasks</h1>
 
       <button class="pageHeadingButton" @click="uploadTask">Upload Tasks</button>
     </div>

@@ -114,7 +114,7 @@ export default {
               as="h3"
               class="p-4 text-lg leading-6 font-semibold text-gray-900"
             >
-              Upload Task
+             ⚒️ Upload Task
             </DialogTitle>
 
             <div class="p-4">

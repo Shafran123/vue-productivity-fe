@@ -54,7 +54,7 @@ import EmployeeForm from '@/components/EmployeeForm.vue'
 <template>
   <div class="mainContainer">
     <div class="pageHeadingComponent">
-      <h1 class="pageHeadingH1">Employees</h1>
+      <h1 class="pageHeadingH1">👨‍💻 Employees</h1>
 
       <button class="pageHeadingButton" @click="addemp">Add Employee</button>
     </div>

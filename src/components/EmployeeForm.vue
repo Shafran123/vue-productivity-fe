@@ -113,7 +113,7 @@ export default {
               as="h3"
               class="p-4 text-lg leading-6 font-semibold text-gray-900"
             >
-              Add Employee
+              👨‍💻 Add Employee
             </DialogTitle>
             <div class="p-4 pt-0">
               <div>

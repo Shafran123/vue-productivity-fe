@@ -121,7 +121,7 @@
 <template>
   <div class="mainContainer">
     <div class="pageHeadingComponent">
-      <h1 class="pageHeadingH1">Teams</h1>
+      <h1 class="pageHeadingH1">🏋️ Teams</h1>
 
       <button class="pageHeadingButton" @click="addteam">
         Add Team
@@ -269,7 +269,7 @@
                 sm:my-8 sm:align-middle sm:max-w-lg sm:w-full
               ">
               <DialogTitle as="h3" class="p-4 text-lg leading-6 font-semibold text-gray-900">
-                Create Team
+                🏋️ Create Team
               </DialogTitle>
               <div class="p-4 pt-0">
                 <div>
