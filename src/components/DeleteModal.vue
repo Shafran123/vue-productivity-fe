@@ -4,7 +4,7 @@
   import { ref } from 'vue'
   import { reactive } from 'vue'
   import { Dialog, DialogOverlay, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
-  import { ExclamationIcon, EyeIcon, PencilIcon, TrashIcon , ClipboardCheckIcon } from '@heroicons/vue/outline'
+  import { ExclamationIcon, EyeIcon, PencilIcon, TrashIcon } from '@heroicons/vue/outline'
 
 export default {
 
@@ -19,16 +19,9 @@ export default {
       EyeIcon,
       PencilIcon,
       TrashIcon,
-      ClipboardCheckIcon,
-    },
-    data() {
-      return {
-        selectedFile: '',
-       
-      }
     },
   setup() {
-      let open_modal = ref(false);
+      let open_modal = ref(true);
       const open = ref(true)
 
       return {
@@ -36,19 +29,13 @@ export default {
         open_modal
       }
     },
-    props: ['modal'],
+    props: ['modal' , 'heading'],
     methods:{
         closeModal(){
             this.$emit('closeModal')
         },
-
-        uploadTask(){
-            this.$emit('uploadTask' , this.selectedFile)
-            
-        },
-        fileSelected(event){
-          console.log(event.target.files);
-          this.selectedFile = event.target.files[0]
+        _delete(){
+            this.$emit('delete')
         },
     },
 }
@@ -125,40 +112,14 @@ export default {
               as="h3"
               class="p-4 text-lg leading-6 font-semibold text-gray-900"
             >
-             ⚒️ Upload Task
+              {{heading}}
             </DialogTitle>
-
-            <div class="p-4">
-              <label v-if="this.selectedFile" class="inline-block mb-2 text-gray-500"
-                >{{this.selectedFile.name}}
-                </label>
-              <div class="flex items-center justify-center w-full">
-                <label
-                  class="
-                    flex flex-col
-                    w-full
-                    h-32
-                    border-4 border-dashed
-                    hover:bg-gray-100 hover:border-gray-300
-                  "
-                >
-                  <div class="flex flex-col items-center justify-center pt-7">
-                    <ClipboardCheckIcon  class="h-10 text-gray-500"/>
-                    <p
-                      class="
-                        pt-1
-                        text-sm
-                        tracking-wider
-                        text-gray-400
-                        group-hover:text-gray-600
-                      "
-                    >
-                      Select Json
-                    </p>
-                  </div>
-                  <input type="file"  @change="fileSelected" class="opacity-0" />
-                </label>
+            <div class="p-4 pt-0">
+              <div class="pl-1">
+The operation detele will cannot be undone!<br>
+                Are you sure you want to delete?
               </div>
+                
             </div>
 
             <div
@@ -181,20 +142,20 @@ export default {
                   shadow-sm
                   px-4
                   py-2
-                  bg-cyan-500
+                  bg-red-500
                   text-base
                   font-medium
                   text-white
-                  hover:bg-cyan-700
+                  hover:bg-red-700
                   focus:outline-none
                   focus:ring-2
                   focus:ring-offset-2
-                  focus:ring-cyan-500
+                  focus:ring-red-500
                   sm:ml-3 sm:w-auto sm:text-sm
                 "
-                @click="uploadTask()"
+                @click="_delete()"
               >
-                Upload Task
+                Delete
               </button>
               <button
                 type="button"

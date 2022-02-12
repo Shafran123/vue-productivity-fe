@@ -1,4 +1,4 @@
-<script  lang="ts">
+<script  lang="js">
   import { UserGroupIcon , UserIcon  , ClipboardListIcon} from '@heroicons/vue/outline'
   export default {
 

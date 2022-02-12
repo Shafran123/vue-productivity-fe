@@ -3,9 +3,10 @@
 
   import { ref } from 'vue'
   import { reactive } from 'vue'
+    import moment from 'moment'
   import { Dialog, DialogOverlay, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
   import { ExclamationIcon, EyeIcon, PencilIcon, TrashIcon } from '@heroicons/vue/outline'
-
+ import axios_i from '../services/axiosinstance'
 export default {
 
 
@@ -20,6 +21,31 @@ export default {
       PencilIcon,
       TrashIcon,
     },
+    updated(){
+      console.log('updates');
+      if(this.editMode){
+        this.form.emp_code = this.data.emp_code,
+        this.form.emp_name = this.data.emp_name,
+        this.form.team_code = this.data.team_code,
+        this.form.join_date =  moment(this.data.join_date).format('YYYY-MM-DD')
+      }else{
+        this.form.emp_code = '',
+        this.form.emp_name = '',
+        this.form.team_code = '',
+        this.form.join_date =  ''
+      }
+    },
+    data() {
+      return {
+        teams: [],
+       form:{
+          emp_code: '',
+          emp_name: '',
+          team_code : '',
+          join_date: Date.now()
+        },
+      }
+    },
   setup() {
       let open_modal = ref(false);
       const open = ref(true)
@@ -29,14 +55,38 @@ export default {
         open_modal
       }
     },
-    props: ['modal'],
+    props: ['modal' , 'editMode' , 'data'],
+      mounted() {
+      console.log('Component mounted.' ),
+
+      this.getTeams()
+
+    },
     methods:{
+         moment: function (date) {
+            return moment(date);
+        },
+        getTeams(){
+        axios_i.get('user/get-all-teams').then(res => {
+            console.log(res)
+            this.teams = res.data.data
+          }).catch(err => {
+            console.log(err)
+          })
+        },
+
         closeModal(){
             this.$emit('closeModal')
         },
         
         addEmployee(){
-            this.$emit('addEmployee')
+          console.log(this.form)
+            this.$emit('addEmployee' , this.form)
+        },
+
+        editEmployee(){
+          console.log('edit emp'),
+          this.$emit('editEmployee' , this.form)
         },
     },
 }
@@ -113,7 +163,7 @@ export default {
               as="h3"
               class="p-4 text-lg leading-6 font-semibold text-gray-900"
             >
-              👨‍💻 Add Employee
+              👨‍💻 {{editMode ? 'Edit' : 'Add'}}  Employee
             </DialogTitle>
             <div class="p-4 pt-0">
               <div>
@@ -124,8 +174,10 @@ export default {
                 >
                 <input
                   type="text"
-                  name="first-name"
-                  id="first-name"
+                  name="emp-code"
+                  :disabled="editMode"
+                  id="emp-cdoe"
+                  v-model="form.emp_code"
                   autocomplete="given-name"
                   class="
                     h-10
@@ -153,6 +205,7 @@ export default {
                   type="text"
                   name="first-name"
                   id="first-name"
+                      v-model="form.emp_name"
                   autocomplete="given-name"
                   class="
                     h-10
@@ -170,14 +223,44 @@ export default {
                 />
               </div>
 
+                <div>
+                <label
+                  for="first-name"
+                  class="block text-sm font-medium text-gray-700"
+                  >Team </label
+                >
+                <select
+                type="option"
+                      v-model="form.team_code"
+                  class="
+                    h-10
+                    pl-3
+                    mt-1
+                    mb-3
+                    focus:ring-indigo-500 focus:border-indigo-500
+                    block
+                    w-full
+                    shadow-sm
+                    sm:text-sm
+                    border-gray-400 border-[1px]
+                             bg-white
+                    rounded-md
+                  "
+                 >
+                      <option v-for="index in teams" :key="index" :value="index.team_code">{{index.team_name}}</option>
+                 </select>
+              </div>
+
               <div>
                 <label
                   for="first-name"
+                  
                   class="block text-sm font-medium text-gray-700"
                   >Join Date</label
                 >
                 <input
                   type="date"
+                       v-model="form.join_date"
                   name="first-name"
                   id="first-name"
                   autocomplete="given-name"
@@ -231,9 +314,9 @@ export default {
                   focus:ring-cyan-500
                   sm:ml-3 sm:w-auto sm:text-sm
                 "
-                @click="addEmployee()"
+                @click="editMode ? editEmployee() : addEmployee()"
               >
-                Add Employee
+                {{editMode ? 'Edit' :'Add'}}  Employee
               </button>
               <button
                 type="button"

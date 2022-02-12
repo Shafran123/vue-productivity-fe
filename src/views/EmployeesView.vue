@@ -1,9 +1,12 @@
 <script lang="js">
- import { ref } from 'vue'
+  import { ref } from 'vue'
   import { reactive } from 'vue'
+  import moment from 'moment'
   import { Dialog, DialogOverlay, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
   import { ExclamationIcon, EyeIcon, PencilIcon, TrashIcon } from '@heroicons/vue/outline'
-import EmployeeForm from '@/components/EmployeeForm.vue'
+  import EmployeeForm from '@/components/EmployeeForm.vue'
+  import axios_i from '../services/axiosinstance'
+  import DeleteModal from '@/components/DeleteModal.vue'
   export default {
       components: {
       Dialog,
@@ -16,23 +19,47 @@ import EmployeeForm from '@/components/EmployeeForm.vue'
       PencilIcon,
       TrashIcon,
       EmployeeForm,
+      DeleteModal
     },
+     mounted() {
+      console.log('Component mounted.')
+      this.getAllEmployees()
+    },
+
     setup(){
       let open_modal = ref(false);
+      let open_delete_modal = ref(false);
       const open = ref(true)
 
       return {
         open,
-        open_modal
+        open_modal,
+        open_delete_modal
       }
     },
       data() {
       return {
-        tableData: [1, 3, 4],
+        editMode: false,
+        data : '',
+        selectedEmp : '',
+        tableData: [],
         errors: [],
       }
     },
   methods: {
+      moment: function (date) {
+            return moment(date);
+        },
+
+      getAllEmployees(){
+          axios_i.get('emp/get-all-employees').then(res => {
+            console.log(res)
+            this.tableData = res.data.data
+          }).catch(err => {
+            console.log(err)
+          })
+      },
+
       addemp() {
         console.log('On Click Add Emp.')
          this.open_modal = !this.open_modal
@@ -40,12 +67,54 @@ import EmployeeForm from '@/components/EmployeeForm.vue'
 
       onClickCloseModal(){
         console.log('On Click Close Modal')
+        this.editMode = false
          this.open_modal = false
       },
-
-      onClickAddEmployee(){
-        console.log('Add Employee Cliked')
+      onClickCloseModalDelete(){
+        this.open_delete_modal = false
       },
+
+      onClickAddEmployee(data){
+        console.log('Add Employee Cliked' , data)
+
+           axios_i.post('emp/create-emp', data).then(res => {
+            console.log(res)
+            this.getAllEmployees()
+              this.open_modal = false
+          }).catch(err => {
+            console.log(err)
+          })
+
+      },
+      onClickEditEmp(emp){
+        this.editMode = true 
+        this.data = emp
+        this.open_modal = !this.open_modal
+      },
+      onClickEditEmployee(emp){
+        console.log(emp);
+            axios_i.put(`emp/update-employee?emp_code=${emp.emp_code}`, emp).then(res => {
+              console.log(res);
+              this.getAllEmployees()
+              this.open_modal = false
+            }).catch(err => {
+              console.log(err);
+            })
+      },
+      onClickDeleteIconEmp(emp){
+        console.log(emp);
+        this.selectedEmp = emp
+        this.open_delete_modal = true
+
+      },
+      onClickDelete(){
+         axios_i.delete(`emp/delete-employee?emp_code=${this.selectedEmp.emp_code}`).then(res => {
+                 this.getAllEmployees()
+                  this.open_delete_modal = false
+           }).catch(err => {
+             console.log(err);
+           })
+      }
     },
   }
 
@@ -54,7 +123,7 @@ import EmployeeForm from '@/components/EmployeeForm.vue'
 <template>
   <div class="mainContainer">
     <div class="pageHeadingComponent">
-      <h1 class="pageHeadingH1">👨‍💻 Employees</h1>
+      <h1 class="pageHeadingH1">👨‍💻 Employees </h1>
 
       <button class="pageHeadingButton" @click="addemp">Add Employee</button>
     </div>
@@ -70,9 +139,9 @@ import EmployeeForm from '@/components/EmployeeForm.vue'
                 <tr>
                   <th scope="col" class="thStyles">Team Code</th>
                   <th scope="col" class="thStyles">Team Name</th>
-                  <th scope="col" class="thStyles">Start Date</th>
-                  <th scope="col" class="thStyles">End Date</th>
-                  <th scope="col" class="thStyles">Status</th>
+                  <th scope="col" class="thStyles">Join Date</th>
+                  <th scope="col" class="thStyles">Team</th>
+                
                   <th scope="col" class="thAction">
                     Actions
                     <!-- <span class="sr-only">Edit</span> -->
@@ -83,37 +152,20 @@ import EmployeeForm from '@/components/EmployeeForm.vue'
                 <tr v-for="index in tableData" :key="index">
                   <td class="tableDataStyles">
                     <div class="flex items-center">
-                      <div class="txtTableData">ABC_!23</div>
+                      <div class="txtTableData">{{index.emp_code}}</div>
                     </div>
                   </td>
                   <td class="tableDataStyles">
                     <div class="flex items-center">
-                      <div class="txtTableData">WebShop</div>
+                      <div class="txtTableData">{{index.emp_name}}</div>
                     </div>
                   </td>
                   <td class="tableDataStyles">
-                    <div class="txtTableData">12/02/2022</div>
+                    <div class="txtTableData">{{ moment(index.join_date).format("DD/MM/YY") }}</div>
                   </td>
 
                   <td class="tableDataStyles">
-                    <div class="txtTableData">12/02/2022</div>
-                  </td>
-
-                  <td class="tableDataStyles">
-                    <span
-                      class="
-                        px-2
-                        inline-flex
-                        text-xs
-                        leading-5
-                        font-semibold
-                        rounded-full
-                        bg-green-100
-                        text-green-800
-                      "
-                    >
-                      Active
-                    </span>
+                    <div class="txtTableData">{{index.team_code}}</div>
                   </td>
 
                   <td
@@ -126,13 +178,13 @@ import EmployeeForm from '@/components/EmployeeForm.vue'
                     "
                   >
                     <div class="flex justify-evenly items-center">
-                      <div>
+                      <!-- <div>
                         <EyeIcon class="h-5 text-gray-500" />
-                      </div>
-                      <div>
+                      </div> -->
+                      <div @click="onClickEditEmp(index)"> 
                         <PencilIcon class="h-4 text-gray-500" />
                       </div>
-                      <div>
+                      <div  @click="onClickDeleteIconEmp(index)">
                         <TrashIcon class="h-4 text-gray-500" />
                       </div>
                     </div>
@@ -147,6 +199,15 @@ import EmployeeForm from '@/components/EmployeeForm.vue'
       </div>
     </div>
 
-    <EmployeeForm v-bind:modal="open_modal"  @closeModal="onClickCloseModal()" @addEmployee="onClickAddEmployee()" />
+    <EmployeeForm  
+    v-bind:modal="open_modal" 
+    v-bind:editMode="this.editMode"  
+    v-bind:data="this.data" 
+    @closeModal="onClickCloseModal()" 
+    @addEmployee="onClickAddEmployee"
+    @editEmployee="onClickEditEmployee"
+     />
+
+     <DeleteModal v-bind:modal="open_delete_modal" v-bind:heading="'👨‍💻 Delete Employee'" @closeModal="onClickCloseModalDelete()" @delete="onClickDelete()" />
   </div>
 </template>

@@ -1,10 +1,36 @@
 <script lang="js">
+  import axios_i from '../services/axiosinstance'
 
   export default {
+
+    data(){
+      return{
+        email: '', 
+        password: '',
+        login_error: false
+      }
+    },
+
      methods: {
       login() {
+        this.login_error = false     
         console.log('Login Clikc')
+        let data = {
+          email : this.email,
+          password : this.password
+        }
+
+          axios_i.post('user/login' , data).then(res => {
+            console.log(res);
+            localStorage.setItem('token' , res.data.token)
+                localStorage.setItem('user' , JSON.stringify(res.data.user))
+
             this.$router.push({ name: "teams"})
+          }).catch(err => {
+            console.log(err ,);
+            this.login_error = true          
+            })
+         
       },
     },
 }
@@ -61,6 +87,7 @@
             "
             type="email"
             name=""
+            v-model="email"
             id=""
           />
         </div>
@@ -84,11 +111,15 @@
             type="password"
             name=""
             id=""
+            v-model="password"
           />
         </div>
 
+        <div v-if="login_error" class="text-red-500">Something Went Wrong!</div>
+
         <div class="pt-4">
-          <button @click="login()"
+          <button
+            @click="login()"
             class="
               w-full
               bg-cyan-500

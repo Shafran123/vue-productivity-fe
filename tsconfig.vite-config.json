@@ -3,6 +3,9 @@
   "include": ["vite.config.*"],
   "compilerOptions": {
     "composite": true,
+    "noImplicitAny": false, 
+    "allowJs": true,
+    "resolveJsonModule": true ,
     "types": ["node", "vitest"]
   }
 }

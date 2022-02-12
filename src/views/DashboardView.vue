@@ -8,13 +8,26 @@
 export default {
 
     components: {
-  SideNavLinks,
-  SideNavHeading,
+      SideNavLinks,
+      SideNavHeading,
       UserGroupIcon,
       UserIcon,
       ClipboardListIcon, 
       MenuIcon,
       XIcon,
+    },
+    data(){
+      return{
+        email : 'hello'
+      }
+    },
+     mounted() {
+      console.log('Component mounted. Dasgboard')
+
+      this.email = JSON.parse(localStorage.getItem('user')).user_email
+
+      console.log(this.email);
+
     },
     setup() {
           let open_mobile_nav = ref(false)
@@ -75,7 +88,7 @@ export default {
 
             <XIcon  v-if="open_mobile_nav" class="h-6"/>
           </button>
-          <div>Hello User</div>
+          <div>User: {{email}}</div>
         </div>
 
         <div class="bg-[#FBFBFB] md:p-10 w-[100%]">
