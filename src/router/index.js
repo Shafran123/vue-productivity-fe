@@ -5,6 +5,7 @@ import DashboardView  from "../views/DashboardView.vue";
 import ProjectsView  from "../views/ProjectsView.vue";
 import TasksView  from "../views/TasksView.vue";
 import EmployeesView from "../views/EmployeesView.vue";
+import SearchView from "../views/SearchView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -33,6 +34,11 @@ const router = createRouter({
         path: 'employees',
         name: 'employees',
         component: EmployeesView,
+      },
+      {
+        path: 'search',
+        name: 'search',
+        component: SearchView,
       },
     ]
     }

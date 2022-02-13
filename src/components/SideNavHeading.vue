@@ -6,12 +6,13 @@ export default {
 
 <template>
   <div class="flex items-center h-8">
-    <div class="">
-  <img
+    <div class="text-2xl font-semibold text-red-500">
+      Mondia 
+  <!-- <img
             src="https://mondia.com/wp-content/themes/mondia/assets/images/logow.svg"
             class="bg-red-500 h-6"
             alt=""
-          />
+          /> -->
     </div>
     <!-- <div class="pl-3">Mondia.</div> -->
   </div>

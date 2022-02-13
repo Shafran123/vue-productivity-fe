@@ -58,7 +58,12 @@ export default {
         className="bg-white  w-full md:w-[260px]  xxs:hidden md:flex border-r-[1px] border-[#EAEAEA] shadow-md p-6"
       >
         <div class="w-full">
-          <side-nav-heading></side-nav-heading>
+          <div class="flex items-center h-8">
+            <div class="text-2xl font-semibold text-red-500">
+              Mondia <span class="text-[10px] text-black font-normal">v0.0.4</span>
+            </div>
+
+          </div>
 
           <div class="h-10"></div>
 
@@ -83,21 +88,31 @@ export default {
           "
         >
           <button @click="onClickMenuIcon" class="md:hidden">
+            <MenuIcon v-if="!open_mobile_nav" class="h-6" />
 
-            <MenuIcon  v-if="!open_mobile_nav" class="h-6" />
-
-            <XIcon  v-if="open_mobile_nav" class="h-6"/>
+            <XIcon v-if="open_mobile_nav" class="h-6" />
           </button>
-          <div>User: {{email}}</div>
+          <div>User: {{ email }}</div>
         </div>
 
         <div class="bg-[#FBFBFB] md:p-10 w-[100%]">
-
-
-           <div v-if="open_mobile_nav" class="absolute top-14 w-full h-screen left-0 z-40   h-10 bg-gray-200 p-6">
+          <div
+            v-if="open_mobile_nav"
+            class="
+              absolute
+              top-14
+              w-full
+              h-screen
+              left-0
+              z-40
+              h-10
+              bg-gray-200
+              p-6
+            "
+          >
             <SideNavLinks @click="onClickMobileNav" />
           </div>
-       
+
           <router-view></router-view>
         </div>
       </main>
