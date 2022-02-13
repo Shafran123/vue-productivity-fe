@@ -62,7 +62,10 @@
           await  localStorage.setItem('token' , token)
           await  localStorage.setItem('user' , user)
 
-          this.$router.push({ name: "teams"})
+          setTimeout(() => {
+                      this.$router.push({ name: "teams"})
+          }, 1000);
+
       },
     },
 }

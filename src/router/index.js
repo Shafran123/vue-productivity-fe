@@ -14,6 +14,14 @@ const router = createRouter({
       path: "/",
       name: "landing",
       component: LandingView,
+      beforeEnter: (to, form, next) => {
+       let token = localStorage.getItem('token')
+          if(token){
+            return next({name: 'teams'})
+          }else{
+            next()
+          }
+    }
     },
     {
       path: "/dashboard",

@@ -60,7 +60,7 @@ export default {
         <div class="w-full">
           <div class="flex items-center h-8">
             <div class="text-2xl font-semibold text-red-500">
-              Mondia <span class="text-[10px] text-black font-normal">v0.0.4</span>
+              Mondia <span class="text-[10px] text-black font-normal">v0.0.5</span>
             </div>
 
           </div>
