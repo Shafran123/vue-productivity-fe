@@ -4,11 +4,16 @@ export default {
    props: {
             data: Object
         },
+    methods:{
+        taskComponentClick(){
+            this.$emit('taskComponentClick')
+        },
+    },
 };
 </script>
 
 <template>
-  <div
+  <div @click="taskComponentClick"
     class="
       flex flex-col
       justify-between

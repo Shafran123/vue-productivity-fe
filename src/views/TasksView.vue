@@ -6,13 +6,15 @@
   import { ExclamationIcon, EyeIcon, PencilIcon, TrashIcon } from '@heroicons/vue/outline'
   import TaskUploadForm from '@/components/TaskUploadForm.vue'
   import axios_i from '../services/axiosinstance'
-import Task from '@/components/Task.vue'
+  import Task from '@/components/Task.vue'
+  import TaskDetail from '@/components/TaskDetail.vue'
 
 
   export default {
     components: {
       TaskUploadForm,
-      Task
+      Task,
+      TaskDetail
     },
       mounted() {
       console.log('Component mounted getAllTasks.')
@@ -20,6 +22,7 @@ import Task from '@/components/Task.vue'
     },
     data() {
       return {
+        selectedTask: '',
         loading: true,
         backlog:[],
         in_progress:[],
@@ -28,11 +31,13 @@ import Task from '@/components/Task.vue'
     },
     setup() {
       let open_modal = ref(false);
+            let open_task_modal = ref(false);
       const open = ref(true)
 
       return {
         open,
-        open_modal
+        open_modal,
+        open_task_modal
       }
     },
     methods: {
@@ -68,6 +73,17 @@ import Task from '@/components/Task.vue'
           }).catch(err => {
           
           })
+      },
+
+      onClickTask(task){
+          this.selectedTask = task
+          this.open_task_modal = true
+          console.log('Task Clicked' , task)
+          
+      },
+      onClickCloseTaskModal(){
+        console.log('Task Close')
+        this.open_task_modal = false
       },
     },
   }
@@ -119,7 +135,7 @@ import Task from '@/components/Task.vue'
         <div class="text-xl font-medium pb-4">🤯 Backlog</div>
         <div class="taskScrollView">
           <div v-for="index in backlog" :key="index">
-            <task v-bind:data="index"></task>
+            <task v-bind:data="index"  @taskComponentClick="onClickTask(index)" ></task>
           </div>
         </div>
       </div>
@@ -128,7 +144,7 @@ import Task from '@/components/Task.vue'
         <div class="text-xl font-medium pb-4">⛏️ In Progress</div>
         <div class="taskScrollView">
           <div v-for="index in in_progress" :key="index">
-            <task v-bind:data="index"></task>
+            <task v-bind:data="index" @taskComponentClick="onClickTask(index)"></task>
           </div>
         </div>
       </div>
@@ -137,7 +153,7 @@ import Task from '@/components/Task.vue'
         <div class="text-xl font-medium pb-4">✅ Completed</div>
         <div class="taskScrollView">
           <div v-for="index in completed" :key="index">
-            <task v-bind:data="index"></task>
+            <task v-bind:data="index"   @taskComponentClick="onClickTask(index)"></task>
           </div>
         </div>
       </div>
@@ -148,5 +164,7 @@ import Task from '@/components/Task.vue'
       @closeModal="onClickCloseModal()"
       @uploadTask="upload"
     />
+
+    <TaskDetail  v-bind:modal="open_task_modal" v-bind:data="selectedTask" @closeModal="onClickCloseTaskModal()" />
   </div>
 </template>

@@ -22,10 +22,17 @@
 
           axios_i.post('user/login' , data).then(res => {
             console.log(res);
+            try {
             localStorage.setItem('token' , res.data.token)
-                localStorage.setItem('user' , JSON.stringify(res.data.user))
+            localStorage.setItem('user' , JSON.stringify(res.data.user))
 
-            this.$router.push({ name: "teams"})
+              this.$router.push({ name: "teams"})
+            } catch (error) {
+                console.log(error);
+            }
+  
+
+          
           }).catch(err => {
             console.log(err ,);
             this.login_error = true          
