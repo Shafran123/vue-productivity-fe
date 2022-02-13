@@ -44,7 +44,7 @@
 
     <div class="spacer10"></div>
 
-    <input  @input="debounceSearch" class="mb-2 pl-4 w-full bg-white h-14 rounded-md shadow-md"  placeholder="Search Tasks "/>
+    <input  @input="debounceSearch" class="mb-2 pl-4 w-full bg-white h-14 rounded-md shadow-md"  placeholder="Search Tasks By Task Code , Task Name , Project , Status "/>
 
     <div>
        <div v-for="index in tasks" :key="index">
