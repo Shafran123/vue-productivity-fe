@@ -2,7 +2,7 @@ import axios, { Axios } from "axios";
 
 const axiosinstance = axios.create();
 
-axiosinstance.defaults.baseURL = 'http://localhost:2400/api/v1'
+axiosinstance.defaults.baseURL = 'https://vue-backend-prodicvity.herokuapp.com/api/v1/'
 axiosinstance.defaults.headers.common['authorization'] = localStorage.getItem('token')
 
 

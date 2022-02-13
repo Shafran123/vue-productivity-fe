@@ -20,6 +20,7 @@ import Task from '@/components/Task.vue'
     },
     data() {
       return {
+        loading: true,
         backlog:[],
         in_progress:[],
         completed: []
@@ -41,6 +42,7 @@ import Task from '@/components/Task.vue'
             this.backlog = res.data.data.backlog_tasks,
             this.in_progress = res.data.data.inprogress_tasks,
             this.completed = res.data.data.completed_tasks
+            this.loading = false
           }).catch(err => {
           
           })
@@ -94,33 +96,48 @@ import Task from '@/components/Task.vue'
 
     <div class="spacer10"></div>
 
-    <div>
+    <div v-if="this.loading">
+      <div class="flex justify-center items-center">
+        <div
+          class="
+            spinner-border
+            animate-spin
+            inline-block
+            w-8
+            h-8
+            border-4
+            rounded-full
+          "
+          role="status"
+        >
+        </div>
+      </div>
+    </div>
+
+    <div v-if="!this.loading">
       <div class="taskMainContainer">
         <div class="text-xl font-medium pb-4">🤯 Backlog</div>
         <div class="taskScrollView">
-          <div v-for="index in backlog" :key="index" >
-          <task v-bind:data="index" ></task>
+          <div v-for="index in backlog" :key="index">
+            <task v-bind:data="index"></task>
           </div>
-
-      
         </div>
       </div>
 
       <div class="taskMainContainer">
         <div class="text-xl font-medium pb-4">⛏️ In Progress</div>
         <div class="taskScrollView">
-          <div v-for="index in in_progress" :key="index" >
-          <task v-bind:data="index" ></task>
+          <div v-for="index in in_progress" :key="index">
+            <task v-bind:data="index"></task>
           </div>
-         
         </div>
       </div>
 
       <div class="taskMainContainer">
         <div class="text-xl font-medium pb-4">✅ Completed</div>
         <div class="taskScrollView">
-             <div v-for="index in completed" :key="index" >
-          <task v-bind:data="index" ></task>
+          <div v-for="index in completed" :key="index">
+            <task v-bind:data="index"></task>
           </div>
         </div>
       </div>
